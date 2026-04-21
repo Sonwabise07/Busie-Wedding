@@ -1,0 +1,154 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Admin Dashboard — Busie & Ian</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com"/>
+  <link href="https://fonts.googleapis.com/css2?family=Lora:wght@400;700&family=Nunito:wght@400;600;700&display=swap" rel="stylesheet"/>
+  <link rel="stylesheet" href="/static/css/style.css"/>
+</head>
+<body style="background:#f7f4f1;">
+
+<div class="admin-wrap">
+
+  <div class="admin-header">
+    <div>
+      <p style="font-family:var(--font-sans);font-size:0.75rem;font-weight:700;letter-spacing:0.25em;text-transform:uppercase;color:var(--gold);margin-bottom:6px;">Admin</p>
+      <h1 class="admin-title">Busie & Ian — Dashboard</h1>
+    </div>
+    <div style="display:flex;gap:12px;flex-wrap:wrap;">
+      <a href="/admin/export" class="btn btn-burgundy" style="font-size:0.8rem;">Export RSVPs</a>
+      <a href="/admin/export-gifts" class="btn btn-burgundy" style="font-size:0.8rem;">Export Gifts</a>
+      <a href="/" class="btn btn-outline" style="font-size:0.8rem;color:var(--burgundy-deep);border-color:var(--burgundy-deep);">View Site</a>
+      <a href="/admin/logout" class="btn" style="font-size:0.8rem;background:transparent;border:1px solid #ccc;color:var(--text-mid);">Logout</a>
+    </div>
+  </div>
+
+  {% with messages = get_flashed_messages(with_categories=true) %}
+    {% if messages %}
+      {% for category, message in messages %}
+        <div class="flash flash--{{ category }}" style="margin-bottom:20px;max-width:100%;">{{ message }}</div>
+      {% endfor %}
+    {% endif %}
+  {% endwith %}
+
+  <!-- STATS -->
+  <div class="stats-grid">
+    <div class="stat-card gold">
+      <div class="stat-number">{{ total }}</div>
+      <div class="stat-label">Total Responses</div>
+    </div>
+    <div class="stat-card green">
+      <div class="stat-number">{{ attending }}</div>
+      <div class="stat-label">Attending ✓</div>
+    </div>
+    <div class="stat-card red">
+      <div class="stat-number">{{ declined }}</div>
+      <div class="stat-label">Declined ✗</div>
+    </div>
+    <div class="stat-card">
+      <div class="stat-number">{{ guests | length }}</div>
+      <div class="stat-label">Personalised Invites</div>
+    </div>
+  </div>
+
+  <!-- RSVP RESPONSES (message column removed) -->
+  <h2 style="font-family:var(--font-serif);font-size:1.5rem;font-weight:700;color:var(--burgundy-deep);margin-bottom:16px;">All RSVP Responses</h2>
+  {% if rsvps %}
+  <div class="admin-table-wrap" style="margin-bottom:48px;">
+    <table class="admin-table">
+      <thead>
+        <tr>
+          <th>Name</th>
+          <th>Phone Number</th>
+          <th>Attending</th>
+          <th>Date</th>
+        </tr>
+      </thead>
+      <tbody>
+        {% for r in rsvps %}
+        <tr>
+          <td><strong>{{ r.full_name }}</strong></td>
+          <td>
+            <a href="tel:{{ r.phone }}" style="color:var(--burgundy);font-weight:600;">{{ r.phone }}</a>
+          </td>
+          <td>
+            {% if r.attending %}
+              <span class="badge badge-yes">Yes ✓</span>
+            {% else %}
+              <span class="badge badge-no">No ✗</span>
+            {% endif %}
+          </td>
+          <td style="color:var(--text-mid);font-size:0.85rem;">{{ r.submitted_at.strftime('%d %b %Y %H:%M') }}</td>
+        </tr>
+        {% endfor %}
+      </tbody>
+    </table>
+  </div>
+  {% else %}
+  <div style="text-align:center;padding:60px;background:white;color:var(--text-mid);margin-bottom:48px;">
+    <p style="font-family:var(--font-serif);font-size:1.2rem;font-style:italic;">No responses yet — check back soon!</p>
+  </div>
+  {% endif %}
+
+  <!-- GIFT SUMMARY -->
+  <h2 style="font-family:var(--font-serif);font-size:1.5rem;font-weight:700;color:var(--burgundy-deep);margin-bottom:16px;">Gift Registry Summary</h2>
+  <div class="admin-table-wrap" style="margin-bottom:48px;">
+    <table class="admin-table">
+      <thead>
+        <tr>
+          <th>Gift</th>
+          <th>Claimed</th>
+          <th>Remaining</th>
+        </tr>
+      </thead>
+      <tbody>
+        {% for g in gift_summary %}
+        <tr>
+          <td><strong>{{ g.name }}</strong></td>
+          <td>
+            <span class="badge {% if g.claimed == 2 %}badge-yes{% else %}badge-no{% endif %}">
+              {{ g.claimed }} / 2
+            </span>
+          </td>
+          <td style="color:{% if g.remaining == 0 %}#c0392b{% elif g.remaining == 1 %}#92700a{% else %}#2d7a4f{% endif %};font-weight:700;">
+            {{ g.remaining }} left
+          </td>
+        </tr>
+        {% endfor %}
+      </tbody>
+    </table>
+  </div>
+
+  <!-- GIFT CLAIMS DETAIL -->
+  {% if claims %}
+  <h2 style="font-family:var(--font-serif);font-size:1.5rem;font-weight:700;color:var(--burgundy-deep);margin-bottom:16px;">Gift Claims Detail</h2>
+  <div class="admin-table-wrap">
+    <table class="admin-table">
+      <thead>
+        <tr>
+          <th>Gift</th>
+          <th>Claimed By</th>
+          <th>Phone</th>
+          <th>Date</th>
+        </tr>
+      </thead>
+      <tbody>
+        {% for c in claims %}
+        <tr>
+          <td><strong>{{ c.gift_id }}</strong></td>
+          <td>{{ c.claimer_name }}</td>
+          <td><a href="tel:{{ c.claimer_phone }}" style="color:var(--burgundy);font-weight:600;">{{ c.claimer_phone }}</a></td>
+          <td style="color:var(--text-mid);font-size:0.85rem;">{{ c.claimed_at.strftime('%d %b %Y %H:%M') }}</td>
+        </tr>
+        {% endfor %}
+      </tbody>
+    </table>
+  </div>
+  {% endif %}
+
+</div>
+
+</body>
+</html>

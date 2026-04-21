@@ -1,0 +1,89 @@
+{% extends "base.html" %}
+{% block title %}RSVP — Busie & Ian{% endblock %}
+
+{% block content %}
+<div class="rsvp-wrap">
+  <div class="hero-bg-pattern" style="opacity:0.5;"></div>
+
+  <div class="rsvp-ornament">
+    <span style="font-family:var(--font-serif);font-size:0.78rem;letter-spacing:0.35em;text-transform:uppercase;color:var(--gold);opacity:0.8;">
+      ✦ &nbsp; Busie & Ian · 30 May 2026 &nbsp; ✦
+    </span>
+  </div>
+
+  <div class="rsvp-card">
+    <div class="rsvp-card-header-bar">
+      <div class="rsvp-header">
+        <p style="font-family:var(--font-sans);font-size:0.78rem;font-weight:700;letter-spacing:0.25em;text-transform:uppercase;color:var(--gold);margin-bottom:10px;">Kindly Reply</p>
+        <h1 style="font-family:'Playfair Display',Georgia,serif;font-size:2.4rem;font-weight:700;color:var(--cream);">Will you join us?</h1>
+        <div class="section-divider section-divider--center" style="background:var(--gold);margin-top:14px;"></div>
+        {% if guest %}
+          <p style="font-family:var(--font-serif);font-size:1rem;color:var(--cream);font-style:italic;opacity:0.9;margin-top:8px;">
+            You've been personally invited, <strong style="color:var(--gold);">{{ guest.name }}</strong>
+          </p>
+        {% else %}
+          <p style="font-family:var(--font-serif);font-size:0.95rem;color:var(--cream);font-style:italic;line-height:1.7;opacity:0.85;margin-top:8px;">
+            Please respond by <strong style="color:var(--gold);">25 April 2026</strong>.<br />
+            Attendance strictly by invitation only.
+          </p>
+        {% endif %}
+      </div>
+    </div>
+
+    <div class="rsvp-card-body">
+      <form method="POST" action="{{ url_for('rsvp') }}{% if token %}?token={{ token }}{% endif %}">
+        <input type="hidden" name="token" value="{{ token or '' }}" />
+
+        <div class="form-group">
+          <label class="form-label" for="full_name">Full Name</label>
+          <input class="form-input" type="text" id="full_name" name="full_name"
+                 value="{{ guest.name if guest else '' }}"
+                 placeholder="Your full name" required />
+        </div>
+
+        <div class="form-group">
+          <label class="form-label" for="phone">Phone Number</label>
+          <input class="form-input" type="tel" id="phone" name="phone"
+                 placeholder="e.g. 082 123 4567" required />
+        </div>
+
+        <div class="form-group">
+          <label class="form-label">Will you be attending?</label>
+          <div class="rsvp-pill-toggle">
+            <input type="radio" id="yes" name="attending" value="yes" checked />
+            <label for="yes" class="rsvp-pill"><span class="pill-icon">✓</span> Joyfully Accepts</label>
+            <input type="radio" id="no" name="attending" value="no" />
+            <label for="no" class="rsvp-pill"><span class="pill-icon">✗</span> Regretfully Declines</label>
+          </div>
+        </div>
+
+        <!-- MESSAGE FIELD REMOVED -->
+
+        <div class="rsvp-reminders">
+          <p class="rsvp-reminders-title">Please note</p>
+          <div class="rsvp-reminders-list">
+            <span class="rsvp-reminder-item">🔞 Adults only</span>
+            <span class="rsvp-reminder-item">👤 No plus-ones</span>
+            <span class="rsvp-reminder-item">👗 Formal dress (no all‑white/all‑black)</span>
+          </div>
+        </div>
+
+        <button type="submit" class="btn btn-gold rsvp-submit-btn" id="submitBtn">
+          Send My Response
+        </button>
+      </form>
+    </div>
+  </div>
+</div>
+{% endblock %}
+
+{% block scripts %}
+<script>
+  document.querySelector('form').addEventListener('submit', function() {
+    const btn = document.getElementById('submitBtn');
+    btn.textContent = 'Sending…';
+    btn.style.opacity = '0.7';
+    btn.disabled = true;
+  });
+</script>
+{% endblock %}

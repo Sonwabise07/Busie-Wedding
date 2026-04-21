@@ -1,0 +1,55 @@
+{% extends "base.html" %}
+{% block title %}Our Big Day — Busie & Ian{% endblock %}
+{% block content %}
+
+<div class="page-hero">
+  <div class="hero-bg-pattern"></div>
+  <div class="page-hero-inner">
+    <p class="section-label" style="color:var(--gold);">Where it all happens</p>
+    <h1 class="page-hero-title">Our Big Day</h1>
+    <div class="section-divider section-divider--center" style="background:var(--gold);"></div>
+    <p class="page-hero-sub">East London, Eastern Cape &nbsp;·&nbsp; 30 May 2026</p>
+  </div>
+</div>
+
+<!-- ── VENUE + MAP side by side ── -->
+<section class="page-section">
+  <div class="venue-split">
+
+    <div class="venue-split-text">
+      <p class="section-label">The Venue</p>
+      <h2 class="section-title">L'Avion</h2>
+      <div class="section-divider"></div>
+      <p style="font-family:var(--font-serif);font-size:1rem;color:var(--text-mid);font-style:italic;line-height:1.85;margin-bottom:20px;">
+        A stunning venue in the heart of East London — the perfect backdrop for an unforgettable celebration.
+      </p>
+      <div class="venue-info-list">
+        <div class="venue-info-item"><span class="venue-info-icon">📍</span><span>L'Avion, East London, Eastern Cape</span></div>
+        <div class="venue-info-item"><span class="venue-info-icon">🕐</span><span>Ceremony at <strong>11:00 AM</strong></span></div>
+        <div class="venue-info-item"><span class="venue-info-icon">🥂</span><span>Reception to follow</span></div>
+        <!-- UPDATED: Transport wording changed -->
+        <div class="venue-info-item"><span class="venue-info-icon">🚌</span><span>Transport back to city centre can be arranged</span></div>
+      </div>
+      <a href="https://maps.google.com/?q=L%27Avion+East+London"
+         target="_blank" class="btn btn-burgundy" style="margin-top:28px;">Open in Google Maps</a>
+    </div>
+
+    <div class="venue-split-image">
+      <div class="venue-img-frame">
+        <img src="{{ url_for('static', filename='images/EMR_4129.jpg') }}" alt="L'Avion venue"
+             onerror="this.parentElement.innerHTML='<div class=\'venue-img-placeholder\'><p>Venue photo<br/>coming soon</p></div>'" />
+      </div>
+    </div>
+
+  </div>
+</section>
+
+<!-- ── TIMELINE REMOVED ── -->
+
+<!-- UPDATED: Embedded map points to L'Avion -->
+<iframe class="venue-map"
+  src="https://maps.google.com/maps?q=L%27Avion+East+London&output=embed"
+  allowfullscreen="" loading="lazy">
+</iframe>
+
+{% endblock %}

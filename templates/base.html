@@ -1,0 +1,127 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>{% block title %}Busie & Ian — 30 May 2026{% endblock %}</title>
+
+  <!-- Fonts -->
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Great+Vibes&family=Playfair+Display:ital,wght@0,400;0,700;1,400&family=Lato:wght@300;400;700&display=swap" rel="stylesheet" />
+
+  <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}" />
+  {% block head %}{% endblock %}
+</head>
+<body>
+
+  <nav class="site-nav" id="siteNav">
+    <a href="{{ url_for('index') }}" class="nav-brand">B <span class="nav-amp">&</span> I</a>
+    <ul class="nav-links" id="navLinks">
+      <li><a href="{{ url_for('index') }}">Home</a></li>
+      <li><a href="{{ url_for('venue') }}">Our Big Day</a></li>
+      <li><a href="{{ url_for('stay') }}">Accommodation</a></li>
+      <li><a href="{{ url_for('gifts') }}">Gift Registry</a></li>
+      <li><a href="{{ url_for('rsvp') }}" class="nav-rsvp">RSVP</a></li>
+    </ul>
+    <button class="nav-hamburger" onclick="toggleNav()" aria-label="Menu">&#9776;</button>
+  </nav>
+
+  {% with messages = get_flashed_messages(with_categories=true) %}
+    {% if messages %}
+      <div class="flash-container">
+        {% for category, message in messages %}
+          <div class="flash flash--{{ category }}">{{ message }}</div>
+        {% endfor %}
+      </div>
+    {% endif %}
+  {% endwith %}
+
+  <main>{% block content %}{% endblock %}</main>
+
+  <footer class="site-footer">
+    <p class="footer-ornament">✦ &nbsp; 30 · May · 2026 &nbsp; ✦</p>
+    <p class="footer-names">Busie <span class="footer-amp">&</span> Ian</p>
+    <p class="footer-date">East London · Eastern Cape</p>
+    <p class="footer-location">South Africa</p>
+    <p class="footer-contact">Enquiries: <a href="https://wa.me/27791446990">079 144 6990</a></p>
+  </footer>
+
+  <!-- YouTube Background Music (hidden, autoplays muted) -->
+  <div id="youtube-music-container" style="position: fixed; bottom: 20px; right: 20px; z-index: 1000; display: flex; flex-direction: column; align-items: center; gap: 8px;">
+    <button id="unmuteButton" class="music-btn" title="Play music">
+      <span class="music-icon">🎵</span>
+    </button>
+    <span class="music-label">Our Song</span>
+  </div>
+
+  <!-- YouTube IFrame API -->
+  <script src="https://www.youtube.com/iframe_api"></script>
+
+  <script>
+    let player;
+    let isUnmuted = false;
+
+    function onYouTubeIframeAPIReady() {
+      player = new YT.Player('youtube-player', {
+        videoId: 'mC2jaVEIvGM',
+        playerVars: {
+          autoplay: 1,
+          mute: 1,
+          loop: 1,
+          playlist: 'mC2jaVEIvGM',
+          controls: 0,
+          showinfo: 0,
+          modestbranding: 1,
+          rel: 0
+        },
+        events: {
+          onReady: onPlayerReady,
+          onStateChange: onPlayerStateChange
+        }
+      });
+    }
+
+    function onPlayerReady(event) {
+      event.target.playVideo();
+    }
+
+    function onPlayerStateChange(event) {
+      // Loop manually if needed (playlist param handles it, but just in case)
+      if (event.data === YT.PlayerState.ENDED) {
+        player.playVideo();
+      }
+    }
+
+    // Unmute button logic
+    const unmuteBtn = document.getElementById('unmuteButton');
+    if (unmuteBtn) {
+      unmuteBtn.addEventListener('click', function() {
+        if (player && !isUnmuted) {
+          player.unMute();
+          player.setVolume(50);
+          isUnmuted = true;
+          unmuteBtn.classList.add('playing');
+          // Optional: change icon
+          const iconSpan = unmuteBtn.querySelector('.music-icon');
+          if (iconSpan) iconSpan.textContent = '🎶';
+        }
+      });
+    }
+
+    // Navigation and scroll effects (unchanged)
+    function toggleNav() { document.getElementById('navLinks').classList.toggle('open'); }
+    const nav = document.getElementById('siteNav');
+    window.addEventListener('scroll', () => { nav.classList.toggle('scrolled', window.scrollY > 60); });
+    const observer = new IntersectionObserver((entries) => {
+      entries.forEach(e => { if (e.isIntersecting) { e.target.classList.add('visible'); observer.unobserve(e.target); } });
+    }, { threshold: 0.12 });
+    document.querySelectorAll('.reveal').forEach(el => observer.observe(el));
+  </script>
+
+  <!-- Hidden YouTube player placeholder (required by API) -->
+  <div id="youtube-player" style="position: absolute; bottom: 0; left: 0; width: 0; height: 0; opacity: 0; pointer-events: none;"></div>
+
+  {% block scripts %}{% endblock %}
+</body>
+</html>

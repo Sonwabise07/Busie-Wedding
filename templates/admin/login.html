@@ -1,0 +1,40 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Admin Login — Busie & Ian</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com"/>
+  <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;1,300&family=Montserrat:wght@300;400;500;600&display=swap" rel="stylesheet"/>
+  <link rel="stylesheet" href="/static/css/style.css"/>
+</head>
+<body>
+<div class="rsvp-wrap" style="min-height:100vh;">
+  <div class="rsvp-card" style="max-width:420px;">
+    <div class="rsvp-header">
+      <p style="font-family:var(--font-sans);font-size:0.65rem;font-weight:600;letter-spacing:0.3em;text-transform:uppercase;color:var(--gold);margin-bottom:12px;">Admin Access</p>
+      <h1 style="font-family:var(--font-serif);font-size:2rem;color:var(--burgundy);">Dashboard Login</h1>
+    </div>
+
+    {% with messages = get_flashed_messages(with_categories=true) %}
+      {% if messages %}
+        {% for category, message in messages %}
+          <div class="flash flash--{{ category }}" style="margin-bottom:20px;">{{ message }}</div>
+        {% endfor %}
+      {% endif %}
+    {% endwith %}
+
+    <form method="POST">
+      <div class="form-group">
+        <label class="form-label" for="password">Password</label>
+        <input class="form-input" type="password" id="password" name="password"
+               placeholder="Enter admin password" required autofocus />
+      </div>
+      <button type="submit" class="btn btn-gold" style="width:100%;font-size:0.8rem;letter-spacing:0.2em;">
+        Enter Dashboard
+      </button>
+    </form>
+  </div>
+</div>
+</body>
+</html>

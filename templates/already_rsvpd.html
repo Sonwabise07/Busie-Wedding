@@ -1,0 +1,19 @@
+{% extends "base.html" %}
+{% block title %}Already Responded — Busie & Ian{% endblock %}
+{% block content %}
+<div class="thankyou-wrap">
+  <div class="thankyou-card">
+    <div class="thankyou-icon">💛</div>
+    <p class="thankyou-script">Already received!</p>
+    <div class="section-divider section-divider--center" style="background:var(--gold);"></div>
+    <p class="thankyou-body">
+      <strong style="color:var(--gold);">{{ guest.name }}</strong>,<br /><br />
+      your response has already been recorded.<br />
+      Thank you — we look forward to celebrating with you!
+    </p>
+    <div style="margin-top:40px;">
+      <a href="{{ url_for('index') }}" class="btn btn-outline">Back to Website</a>
+    </div>
+  </div>
+</div>
+{% endblock %}

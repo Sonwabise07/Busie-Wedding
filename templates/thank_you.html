@@ -1,0 +1,33 @@
+{% extends "base.html" %}
+{% block title %}Thank You — Busie & Ian{% endblock %}
+{% block content %}
+<div class="thankyou-wrap">
+  <div class="thankyou-card">
+    {% if attending == 'yes' %}
+      <div class="thankyou-icon">🥂</div>
+      <p class="thankyou-script">See you there!</p>
+      <div class="section-divider section-divider--center" style="background:var(--gold);"></div>
+      <p class="thankyou-body">
+        We're so excited to celebrate with you.<br />
+        Mark your calendar for <strong style="color:var(--gold);">30 May 2026</strong> —<br />
+        it's going to be a beautiful day.
+      </p>
+      <div style="margin-top:40px;display:flex;gap:20px;justify-content:center;flex-wrap:wrap;">
+        <a href="{{ url_for('venue') }}" class="btn btn-gold">Venue Details</a>
+        <a href="{{ url_for('stay') }}" class="btn btn-outline">Places to Stay</a>
+      </div>
+    {% else %}
+      <div class="thankyou-icon">💛</div>
+      <p class="thankyou-script">We'll miss you</p>
+      <div class="section-divider section-divider--center" style="background:var(--gold);"></div>
+      <p class="thankyou-body">
+        Thank you for letting us know.<br />
+        You'll be in our hearts on our special day.
+      </p>
+      <div style="margin-top:40px;">
+        <a href="{{ url_for('index') }}" class="btn btn-outline">Back Home</a>
+      </div>
+    {% endif %}
+  </div>
+</div>
+{% endblock %}

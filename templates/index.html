@@ -1,0 +1,318 @@
+{% extends "base.html" %}
+{% block title %}Busie & Ian — 30 May 2026{% endblock %}
+
+{% block head %}
+<style>
+.hero {
+  min-height: 100vh;
+  background: #4a0f1e; /* Solid burgundy base */
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  text-align: center;
+  position: relative;
+  overflow: hidden;
+  padding: 110px 24px 260px;
+}
+
+/* Faded background photo (EMR_4129.jpg) */
+.hero-bg-fade {
+  position: absolute;
+  inset: 0;
+  z-index: 0;
+  background-image: url('/static/images/EMR_4129.jpg');
+  background-size: cover;
+  background-position: center 30%;
+  opacity: 0.28; /* Adjust for desired faded effect */
+  background-repeat: no-repeat;
+  animation: gentleZoom 20s ease-in-out infinite alternate;
+}
+
+/* Gold diamond pattern overlay */
+.hero-bg-pattern {
+  position: absolute;
+  inset: 0;
+  z-index: 1;
+  background: url("data:image/svg+xml,%3Csvg width='60' height='60' viewBox='0 0 60 60' xmlns='http://www.w3.org/2000/svg'%3E%3Cg fill='none' fill-rule='evenodd'%3E%3Cg fill='%23C9A84C' fill-opacity='0.04'%3E%3Cpath d='M36 34v-4h-2v4h-4v2h4v4h2v-4h4v-2h-4zm0-30V0h-2v4h-4v2h4v4h2V6h4V4h-4zM6 34v-4H4v4H0v2h4v4h2v-4h4v-2H6zM6 4V0H4v4H0v2h4v4h2V6h4V4H6z'/%3E%3C/g%3E%3C/g%3E%3C/svg%3E");
+  pointer-events: none;
+}
+
+/* All content sits above both layers */
+.hero > *:not(.hero-bg-fade):not(.hero-bg-pattern) {
+  position: relative;
+  z-index: 2;
+}
+
+/* Ornament line */
+.hero-ornament {
+  font-family: var(--font-sans);
+  font-size: 0.72rem;
+  font-weight: 700;
+  letter-spacing: 0.45em;
+  text-transform: uppercase;
+  color: var(--gold);
+  opacity: 0.9;
+  margin-bottom: 20px;
+  animation: fadeUp 0.9s ease both;
+}
+
+/* Couple names — readable & stylish (Playfair Display) */
+.hero-names {
+  font-family: 'Playfair Display', Georgia, serif;
+  font-size: clamp(3.5rem, 8vw, 6rem);
+  font-weight: 700;
+  color: var(--cream);
+  line-height: 1.1;
+  letter-spacing: 0.02em;
+  text-shadow: 0 2px 8px rgba(0,0,0,0.25);
+  animation: fadeUp 0.9s 0.1s ease both;
+}
+.hero-amp {
+  color: var(--gold);
+  font-weight: 400;
+  margin: 0 0.1em;
+}
+
+/* Divider */
+.hero-divider {
+  width: 80px;
+  height: 1px;
+  background: linear-gradient(90deg, transparent, var(--gold), transparent);
+  margin: 22px auto;
+  animation: fadeUp 0.9s 0.2s ease both;
+}
+
+/* Invite text */
+.hero-invite-text {
+  font-family: 'Playfair Display', Georgia, serif;
+  font-size: 1.1rem;
+  font-style: italic;
+  color: var(--cream);
+  opacity: 0.88;
+  max-width: 460px;
+  line-height: 1.9;
+  animation: fadeUp 0.9s 0.3s ease both;
+}
+
+/* Date */
+.hero-date {
+  font-family: 'Playfair Display', Georgia, serif;
+  font-size: clamp(1.5rem, 3.5vw, 2.2rem);
+  font-weight: 700;
+  letter-spacing: 0.15em;
+  color: var(--gold-light);
+  margin-top: 26px;
+  animation: fadeUp 0.9s 0.4s ease both;
+}
+
+/* Location */
+.hero-location {
+  font-family: 'Lato', Arial, sans-serif;
+  font-size: 0.85rem;
+  font-weight: 700;
+  letter-spacing: 0.3em;
+  text-transform: uppercase;
+  color: var(--cream);
+  opacity: 0.55;
+  margin-top: 8px;
+  animation: fadeUp 0.9s 0.45s ease both;
+}
+
+/* Countdown */
+.countdown-wrap {
+  display: flex;
+  align-items: center;
+  gap: 0;
+  margin: 28px 0 0;
+  animation: fadeUp 0.9s 0.5s ease both;
+}
+.countdown-item {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  padding: 0 16px;
+}
+.countdown-num {
+  font-family: 'Playfair Display', Georgia, serif;
+  font-size: clamp(2.2rem, 5vw, 3.2rem);
+  font-weight: 700;
+  color: var(--gold-light);
+  line-height: 1;
+  min-width: 2.2ch;
+  text-align: center;
+}
+.countdown-label {
+  font-family: 'Lato', Arial, sans-serif;
+  font-size: 0.62rem;
+  font-weight: 700;
+  letter-spacing: 0.22em;
+  text-transform: uppercase;
+  color: var(--cream);
+  opacity: 0.45;
+  margin-top: 5px;
+}
+.countdown-sep {
+  font-family: 'Playfair Display', serif;
+  font-size: 1.5rem;
+  color: var(--gold);
+  opacity: 0.3;
+  align-self: flex-start;
+  margin-top: 4px;
+}
+
+/* CTA Buttons */
+.hero-cta {
+  margin-top: 32px;
+  display: flex;
+  gap: 14px;
+  flex-wrap: wrap;
+  justify-content: center;
+  animation: fadeUp 0.9s 0.6s ease both;
+}
+
+/* Photo ticker strip */
+.photo-ticker-wrap {
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  height: 210px;
+  overflow: hidden;
+  z-index: 3;
+  mask-image: linear-gradient(to bottom, transparent 0%, black 28%, black 100%);
+  -webkit-mask-image: linear-gradient(to bottom, transparent 0%, black 28%, black 100%);
+}
+.photo-ticker-track {
+  display: flex;
+  gap: 14px;
+  width: max-content;
+  animation: tickerScroll 38s linear infinite;
+  padding: 14px 0 0;
+}
+.photo-ticker-track:hover { animation-play-state: paused; }
+@keyframes tickerScroll {
+  0%   { transform: translateX(0); }
+  100% { transform: translateX(-50%); }
+}
+.ticker-photo {
+  width: 240px;
+  height: 185px;
+  flex-shrink: 0;
+  border: 1.5px solid rgba(201, 168, 76, 0.35);
+  overflow: hidden;
+  border-radius: 2px;
+  box-shadow: 0 4px 20px rgba(0,0,0,0.35);
+}
+.ticker-photo img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  object-position: center top;
+  display: block;
+  transition: transform 0.5s ease;
+}
+.photo-ticker-track:hover .ticker-photo img { transform: scale(1.05); }
+
+/* Gentle zoom animation for faded background */
+@keyframes gentleZoom {
+  0%   { transform: scale(1); }
+  100% { transform: scale(1.05); }
+}
+</style>
+{% endblock %}
+
+{% block content %}
+<section class="hero">
+
+  <div class="hero-bg-fade"></div>
+  <div class="hero-bg-pattern"></div>
+
+  <p class="hero-ornament">✦ &nbsp; The Wedding of &nbsp; ✦</p>
+
+  <h1 class="hero-names">Busie <span class="hero-amp">&</span> Ian</h1>
+
+  <div class="hero-divider"></div>
+
+  <p class="hero-invite-text">
+    Together with their families,<br />
+    we wish to invite you to celebrate our big day with us.
+  </p>
+
+  <p class="hero-date">30 · May · 2026</p>
+  <p class="hero-location">L'Avion &nbsp;·&nbsp; East London &nbsp;·&nbsp; Eastern Cape</p>
+
+  <div class="countdown-wrap" id="countdown">
+    <div class="countdown-item">
+      <span class="countdown-num" id="cd-days">00</span>
+      <span class="countdown-label">Days</span>
+    </div>
+    <div class="countdown-sep">·</div>
+    <div class="countdown-item">
+      <span class="countdown-num" id="cd-hours">00</span>
+      <span class="countdown-label">Hours</span>
+    </div>
+    <div class="countdown-sep">·</div>
+    <div class="countdown-item">
+      <span class="countdown-num" id="cd-mins">00</span>
+      <span class="countdown-label">Minutes</span>
+    </div>
+    <div class="countdown-sep">·</div>
+    <div class="countdown-item">
+      <span class="countdown-num" id="cd-secs">00</span>
+      <span class="countdown-label">Seconds</span>
+    </div>
+  </div>
+
+  <div class="hero-cta">
+    <a href="{{ url_for('rsvp') }}" class="btn btn-gold">RSVP Now</a>
+    <a href="{{ url_for('venue') }}" class="btn btn-outline">Our Big Day</a>
+    <a href="{{ url_for('gifts') }}" class="btn btn-outline">Gift Registry</a>
+  </div>
+
+  <div class="photo-ticker-wrap">
+    <div class="photo-ticker-track">
+      <div class="ticker-photo"><img src="/static/images/EMR_4069.jpg" alt="Busie and Ian" /></div>
+      <div class="ticker-photo"><img src="/static/images/EMR_4074.jpg" alt="Busie and Ian" /></div>
+      <div class="ticker-photo"><img src="/static/images/EMR_4076.jpg" alt="Busie and Ian" /></div>
+      <div class="ticker-photo"><img src="/static/images/EMR_4077.jpg" alt="Busie and Ian" /></div>
+      <div class="ticker-photo"><img src="/static/images/EMR_4088.jpg" alt="Busie and Ian" /></div>
+      <div class="ticker-photo"><img src="/static/images/EMR_4103.jpg" alt="Busie and Ian" /></div>
+      <div class="ticker-photo"><img src="/static/images/EMR_4111.jpg" alt="Busie and Ian" /></div>
+      <div class="ticker-photo"><img src="/static/images/EMR_4123.jpg" alt="Busie and Ian" /></div>
+      <div class="ticker-photo"><img src="/static/images/EMR_4126.jpg" alt="Busie and Ian" /></div>
+      <div class="ticker-photo"><img src="/static/images/EMR_4129.jpg" alt="Busie and Ian" /></div>
+      <div class="ticker-photo"><img src="/static/images/EMR_4069.jpg" alt="Busie and Ian" /></div>
+      <div class="ticker-photo"><img src="/static/images/EMR_4074.jpg" alt="Busie and Ian" /></div>
+      <div class="ticker-photo"><img src="/static/images/EMR_4076.jpg" alt="Busie and Ian" /></div>
+      <div class="ticker-photo"><img src="/static/images/EMR_4077.jpg" alt="Busie and Ian" /></div>
+      <div class="ticker-photo"><img src="/static/images/EMR_4088.jpg" alt="Busie and Ian" /></div>
+      <div class="ticker-photo"><img src="/static/images/EMR_4103.jpg" alt="Busie and Ian" /></div>
+      <div class="ticker-photo"><img src="/static/images/EMR_4111.jpg" alt="Busie and Ian" /></div>
+      <div class="ticker-photo"><img src="/static/images/EMR_4123.jpg" alt="Busie and Ian" /></div>
+      <div class="ticker-photo"><img src="/static/images/EMR_4126.jpg" alt="Busie and Ian" /></div>
+      <div class="ticker-photo"><img src="/static/images/EMR_4129.jpg" alt="Busie and Ian" /></div>
+    </div>
+  </div>
+
+</section>
+{% endblock %}
+
+{% block scripts %}
+<script>
+  function updateCountdown() {
+    const diff = new Date('2026-05-30T11:00:00') - new Date();
+    if (diff <= 0) {
+      document.getElementById('countdown').innerHTML =
+        '<p style="font-family:\'Playfair Display\',serif;font-size:1.5rem;color:var(--gold);font-weight:700;">Today is the day! 🥂</p>';
+      return;
+    }
+    document.getElementById('cd-days').textContent  = String(Math.floor(diff/86400000)).padStart(2,'0');
+    document.getElementById('cd-hours').textContent = String(Math.floor((diff%86400000)/3600000)).padStart(2,'0');
+    document.getElementById('cd-mins').textContent  = String(Math.floor((diff%3600000)/60000)).padStart(2,'0');
+    document.getElementById('cd-secs').textContent  = String(Math.floor((diff%60000)/1000)).padStart(2,'0');
+  }
+  updateCountdown();
+  setInterval(updateCountdown, 1000);
+</script>
+{% endblock %}

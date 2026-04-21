@@ -1,0 +1,99 @@
+{% extends "base.html" %}
+{% block title %}Gift Registry — Busie & Ian{% endblock %}
+{% block content %}
+
+<div class="page-hero">
+  <div class="hero-bg-pattern"></div>
+  <div class="page-hero-inner">
+    <p class="section-label" style="color:var(--gold);">With Love</p>
+    <h1 class="page-hero-title">Gift Registry</h1>
+    <div class="section-divider section-divider--center" style="background:var(--gold);"></div>
+    <p class="page-hero-sub" style="max-width:500px;">
+      Your presence is our greatest gift. If you'd like to give something,
+      here is a list of things we'd love in our new home.
+      Each gift can be claimed by up to <strong style="color:var(--gold);">2 people</strong>.
+    </p>
+  </div>
+</div>
+
+<!-- ── IMPROVED GIFTS GRID ── -->
+<section class="page-section">
+  <div class="gifts-grid">
+    {% for gift in gifts %}
+    {% set claimed = claims[gift.id] %}
+    {% set remaining = max_per - claimed %}
+    <div class="gift-card {% if remaining == 0 %}gift-card--full{% endif %}">
+      <div class="gift-card-inner">
+        <span class="gift-icon">{{ gift.icon }}</span>
+        <h3 class="gift-name">{{ gift.name }}</h3>
+        <p class="gift-desc">{{ gift.description }}</p>
+
+        <div class="gift-status">
+          {% if remaining == 0 %}
+            <span class="gift-remaining gift-remaining--full">🎁 Fully Claimed</span>
+          {% elif remaining == 1 %}
+            <span class="gift-remaining gift-remaining--low">⭐ 1 spot left</span>
+          {% else %}
+            <span class="gift-remaining gift-remaining--available">✨ {{ remaining }} available</span>
+          {% endif %}
+        </div>
+
+        <div class="gift-options">
+          {% for opt in gift.options %}
+            <a href="{{ opt.url }}" target="_blank" class="gift-option-link">View {{ opt.label }} →</a>
+          {% endfor %}
+        </div>
+
+        {% if remaining > 0 %}
+          <div class="gift-claim-form">
+            <form method="POST" action="{{ url_for('claim_gift') }}">
+              <input type="hidden" name="gift_id" value="{{ gift.id }}" />
+              <input type="text" name="claimer_name" placeholder="Your full name" required />
+              <input type="text" name="claimer_phone" placeholder="Your phone number" required />
+              <button type="submit" class="gift-claim-btn">Claim This Gift 🎁</button>
+            </form>
+          </div>
+        {% else %}
+          <div class="gift-claimed-label">Already fully claimed</div>
+        {% endif %}
+      </div>
+    </div>
+    {% endfor %}
+
+    <!-- Cash gift card (improved design) -->
+    <div class="gift-card cash-gift-card">
+      <div class="cash-gift-icon">💛</div>
+      <h3 class="cash-gift-title">Cash Gift</h3>
+      <p class="cash-gift-desc">
+        If you'd prefer to give cash, we would be truly grateful. Please use the details below.
+      </p>
+      <div class="banking-details">
+        <div class="banking-row">
+          <span class="banking-label">Name</span>
+          <span class="banking-value">Ian Maheti Mbano</span>
+        </div>
+
+        </div>
+        <div class="banking-row">
+          <span class="banking-label">Account No.</span>
+          <span class="banking-value">10137391003</span>
+        </div>
+        <div class="banking-row">
+          <span class="banking-label">Bank Name</span>
+          <span class="banking-value">Standard Bank</span>
+        </div>
+        <div class="banking-row">
+          <span class="banking-label">Branch</span>
+          <span class="banking-value">051001</span>
+        </div>
+        <div class="banking-row">
+          <span class="banking-label">Reference</span>
+          <span class="banking-value">Your Name & Surname</span>
+        </div>
+      </div>
+    </div>
+
+  </div>
+</section>
+
+{% endblock %}
