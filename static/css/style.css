@@ -5,9 +5,9 @@
 ══════════════════════════════════════════ */
 
 :root {
-  --burgundy:      #9E5A6B;      /* lighter burgundy */
-  --burgundy-deep: #7C4A5A;      /* medium-light burgundy */
-  --burgundy-mid:  #B86B7E;      /* even lighter for hover effects */
+  --burgundy:      #c73A52;      /* new light burgundy */
+  --burgundy-deep: #a62e44;      /* slightly darker for depth (10% darker than #c73A52) */
+  --burgundy-mid:  #d55a6e;      /* lighter for hover effects (20% lighter) */
   --gold:          #C9A84C;
   --gold-light:    #e8c97a;
   --cream:         #F5F0E8;
@@ -17,12 +17,12 @@
   --text-mid:      #4a2a1a;
 
   /* Font stacks */
-  --font-script:  'Great Vibes', cursive;           /* decorative only */
+  --font-script:  'Great Vibes', cursive;
   --font-serif:   'Playfair Display', Georgia, serif;
   --font-sans:    'Lato', 'Segoe UI', Arial, sans-serif;
 
   --radius:     4px;
-  --shadow:     0 8px 40px rgba(107, 25, 41, 0.18);
+  --shadow:     0 8px 40px rgba(199, 58, 82, 0.18);  /* updated shadow to match new color */
   --transition: 0.35s ease;
 }
 

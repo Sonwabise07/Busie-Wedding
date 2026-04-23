@@ -5,6 +5,9 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>{% block title %}Busie & Ian — 30 May 2026{% endblock %}</title>
 
+  <!-- Favicon -->
+  <link rel="icon" type="image/png" href="{{ url_for('static', filename='images/favicon-16x16.png') }}">
+
   <!-- Fonts -->
   <link rel="preconnect" href="https://fonts.googleapis.com" />
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
@@ -47,7 +50,7 @@
     <p class="footer-contact">Enquiries: <a href="https://wa.me/27791446990">079 144 6990</a></p>
   </footer>
 
-  <!-- YouTube Background Music (hidden, autoplays muted) -->
+  <!-- YouTube Background Music -->
   <div id="youtube-music-container" style="position: fixed; bottom: 20px; right: 20px; z-index: 1000; display: flex; flex-direction: column; align-items: center; gap: 8px;">
     <button id="unmuteButton" class="music-btn" title="Play music">
       <span class="music-icon">🎵</span>
@@ -55,9 +58,7 @@
     <span class="music-label">Our Song</span>
   </div>
 
-  <!-- YouTube IFrame API -->
   <script src="https://www.youtube.com/iframe_api"></script>
-
   <script>
     let player;
     let isUnmuted = false;
@@ -87,13 +88,11 @@
     }
 
     function onPlayerStateChange(event) {
-      // Loop manually if needed (playlist param handles it, but just in case)
       if (event.data === YT.PlayerState.ENDED) {
         player.playVideo();
       }
     }
 
-    // Unmute button logic
     const unmuteBtn = document.getElementById('unmuteButton');
     if (unmuteBtn) {
       unmuteBtn.addEventListener('click', function() {
@@ -102,14 +101,12 @@
           player.setVolume(50);
           isUnmuted = true;
           unmuteBtn.classList.add('playing');
-          // Optional: change icon
           const iconSpan = unmuteBtn.querySelector('.music-icon');
           if (iconSpan) iconSpan.textContent = '🎶';
         }
       });
     }
 
-    // Navigation and scroll effects (unchanged)
     function toggleNav() { document.getElementById('navLinks').classList.toggle('open'); }
     const nav = document.getElementById('siteNav');
     window.addEventListener('scroll', () => { nav.classList.toggle('scrolled', window.scrollY > 60); });
@@ -119,7 +116,6 @@
     document.querySelectorAll('.reveal').forEach(el => observer.observe(el));
   </script>
 
-  <!-- Hidden YouTube player placeholder (required by API) -->
   <div id="youtube-player" style="position: absolute; bottom: 0; left: 0; width: 0; height: 0; opacity: 0; pointer-events: none;"></div>
 
   {% block scripts %}{% endblock %}
