@@ -1,5 +1,6 @@
 {% extends "base.html" %}
 {% block title %}Thank You — Busie & Ian{% endblock %}
+
 {% block content %}
 <div class="thankyou-wrap">
   <div class="thankyou-card">
@@ -32,7 +33,13 @@
 </div>
 
 <style>
-  /* Ensure buttons are properly displayed on all screens */
+  /* Ensure the container is spaced correctly */
+  .thankyou-wrap {
+    padding: 60px 20px;
+    text-align: center;
+  }
+
+  /* Layout for the buttons */
   .thankyou-buttons {
     margin-top: 40px;
     display: flex;
@@ -40,10 +47,35 @@
     justify-content: center;
     flex-wrap: wrap;
   }
+
+  /* Base button sizing */
   .thankyou-buttons .btn {
     min-width: 180px;
-    text-align: center;
+    padding: 12px 24px;
+    text-decoration: none;
+    font-weight: bold;
+    display: inline-block;
+    transition: all 0.3s ease;
+    border-radius: 4px; /* Adjust based on your theme's roundness */
   }
+
+  /* FORCING VISIBILITY ON THE OUTLINE BUTTON */
+  .thankyou-buttons .btn-outline {
+    border: 2px solid var(--gold) !important;
+    color: var(--gold) !important;
+    background: transparent !important;
+    display: inline-block !important;
+    visibility: visible !important;
+    opacity: 1 !important;
+  }
+
+  /* Hover effect for the outline button */
+  .thankyou-buttons .btn-outline:hover {
+    background-color: var(--gold) !important;
+    color: #3b0918 !important; /* This matches your dark background */
+  }
+
+  /* Responsive styling for mobile */
   @media (max-width: 480px) {
     .thankyou-buttons {
       flex-direction: column;
