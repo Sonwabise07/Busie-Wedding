@@ -5,9 +5,9 @@
 ══════════════════════════════════════════ */
 
 :root {
-  --burgundy:      #c73A52;      /* new light burgundy */
-  --burgundy-deep: #a62e44;      /* slightly darker for depth (10% darker than #c73A52) */
-  --burgundy-mid:  #d55a6e;      /* lighter for hover effects (20% lighter) */
+  --burgundy:      #6B1929;
+  --burgundy-deep: #3a0a12;
+  --burgundy-mid:  #8B2535;
   --gold:          #C9A84C;
   --gold-light:    #e8c97a;
   --cream:         #F5F0E8;
@@ -22,7 +22,7 @@
   --font-sans:    'Lato', 'Segoe UI', Arial, sans-serif;
 
   --radius:     4px;
-  --shadow:     0 8px 40px rgba(199, 58, 82, 0.18);  /* updated shadow to match new color */
+  --shadow:     0 8px 40px rgba(107, 25, 41, 0.18);
   --transition: 0.35s ease;
 }
 
@@ -504,6 +504,22 @@ a { color: inherit; text-decoration: none; }
 .rsvp-pill-toggle input#no:checked + label { background: var(--text-mid); border-color: var(--text-mid); color: var(--cream); }
 .pill-icon { font-style: normal; font-size: 1.1rem; }
 
+
+/* Existing attendance pills */
+.rsvp-pill-toggle input#yes:checked + label,
+.rsvp-pill-toggle input#no:checked + label {
+  background: var(--burgundy);
+  border-color: var(--burgundy);
+  color: var(--cream);
+}
+
+/* NEW: Transport pills highlight */
+.rsvp-pill-toggle input#transport_yes:checked + label,
+.rsvp-pill-toggle input#transport_no:checked + label {
+  background: var(--burgundy);
+  border-color: var(--burgundy);
+  color: var(--cream);
+}
 /* Reminders */
 .rsvp-reminders {
   background: var(--cream);

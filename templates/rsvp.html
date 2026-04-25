@@ -23,7 +23,7 @@
           </p>
         {% else %}
           <p style="font-family:var(--font-serif);font-size:0.95rem;color:var(--cream);font-style:italic;line-height:1.7;opacity:0.85;margin-top:8px;">
-            Please respond by <strong style="color:var(--gold);">30 April 2026</strong>.<br />
+            Please respond by <strong style="color:var(--gold);">25 April 2026</strong>.<br />
             Attendance strictly by invitation only.
           </p>
         {% endif %}
@@ -57,7 +57,16 @@
           </div>
         </div>
 
-        <!-- MESSAGE FIELD REMOVED -->
+        <!-- Transport pills - now with highlight CSS -->
+        <div class="form-group">
+          <label class="form-label">Do you need transport from your accommodation to the venue?</label>
+          <div class="rsvp-pill-toggle" style="grid-template-columns: 1fr 1fr;">
+            <input type="radio" id="transport_yes" name="transport_needed" value="yes" />
+            <label for="transport_yes" class="rsvp-pill"><span class="pill-icon">🚌</span> Yes, I need transport</label>
+            <input type="radio" id="transport_no" name="transport_needed" value="no" checked />
+            <label for="transport_no" class="rsvp-pill"><span class="pill-icon">🚗</span> No, I'll arrange my own</label>
+          </div>
+        </div>
 
         <div class="rsvp-reminders">
           <p class="rsvp-reminders-title">Please note</p>

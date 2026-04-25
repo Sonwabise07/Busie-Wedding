@@ -53,7 +53,7 @@
     </div>
   </div>
 
-  <!-- RSVP RESPONSES (message column removed) -->
+  <!-- RSVP RESPONSES (with Transport column) -->
   <h2 style="font-family:var(--font-serif);font-size:1.5rem;font-weight:700;color:var(--burgundy-deep);margin-bottom:16px;">All RSVP Responses</h2>
   {% if rsvps %}
   <div class="admin-table-wrap" style="margin-bottom:48px;">
@@ -63,6 +63,7 @@
           <th>Name</th>
           <th>Phone Number</th>
           <th>Attending</th>
+          <th>Transport</th>
           <th>Date</th>
         </tr>
       </thead>
@@ -78,6 +79,13 @@
               <span class="badge badge-yes">Yes ✓</span>
             {% else %}
               <span class="badge badge-no">No ✗</span>
+            {% endif %}
+          </td>
+          <td>
+            {% if r.transport_needed %}
+              <span class="badge badge-yes">🚌 Yes</span>
+            {% else %}
+              <span class="badge badge-no">🚗 No</span>
             {% endif %}
           </td>
           <td style="color:var(--text-mid);font-size:0.85rem;">{{ r.submitted_at.strftime('%d %b %Y %H:%M') }}</td>

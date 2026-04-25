@@ -12,7 +12,7 @@
         Mark your calendar for <strong style="color:var(--gold);">30 May 2026</strong> —<br />
         it's going to be a beautiful day.
       </p>
-      <div style="margin-top:40px;display:flex;gap:20px;justify-content:center;flex-wrap:wrap;">
+      <div class="thankyou-buttons">
         <a href="{{ url_for('venue') }}" class="btn btn-gold">Venue Details</a>
         <a href="{{ url_for('stay') }}" class="btn btn-outline">Places to Stay</a>
       </div>
@@ -24,10 +24,36 @@
         Thank you for letting us know.<br />
         You'll be in our hearts on our special day.
       </p>
-      <div style="margin-top:40px;">
+      <div class="thankyou-buttons">
         <a href="{{ url_for('index') }}" class="btn btn-outline">Back Home</a>
       </div>
     {% endif %}
   </div>
 </div>
+
+<style>
+  /* Ensure buttons are properly displayed on all screens */
+  .thankyou-buttons {
+    margin-top: 40px;
+    display: flex;
+    gap: 20px;
+    justify-content: center;
+    flex-wrap: wrap;
+  }
+  .thankyou-buttons .btn {
+    min-width: 180px;
+    text-align: center;
+  }
+  @media (max-width: 480px) {
+    .thankyou-buttons {
+      flex-direction: column;
+      align-items: center;
+      gap: 12px;
+    }
+    .thankyou-buttons .btn {
+      width: 100%;
+      max-width: 260px;
+    }
+  }
+</style>
 {% endblock %}

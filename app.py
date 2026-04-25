@@ -27,17 +27,18 @@ class Guest(db.Model):
     id         = db.Column(db.Integer, primary_key=True)
     name       = db.Column(db.String(200), nullable=False)
     token      = db.Column(db.String(64), unique=True, nullable=False)
-    used       = db.Column(db.Boolean, default=False)          # RSVP submitted
+    used       = db.Column(db.Boolean, default=False)
     created_at = db.Column(db.DateTime, default=datetime.utcnow)
     rsvp       = db.relationship('RSVP', backref='guest', uselist=False)
 
 class RSVP(db.Model):
-    id           = db.Column(db.Integer, primary_key=True)
-    guest_token  = db.Column(db.String(64), db.ForeignKey('guest.token'), nullable=True)
-    full_name    = db.Column(db.String(200), nullable=False)
-    phone        = db.Column(db.String(30), nullable=False)
-    attending    = db.Column(db.Boolean, nullable=False)
-    submitted_at = db.Column(db.DateTime, default=datetime.utcnow)
+    id              = db.Column(db.Integer, primary_key=True)
+    guest_token     = db.Column(db.String(64), db.ForeignKey('guest.token'), nullable=True)
+    full_name       = db.Column(db.String(200), nullable=False)
+    phone           = db.Column(db.String(30), nullable=False)
+    attending       = db.Column(db.Boolean, nullable=False)
+    transport_needed = db.Column(db.Boolean, default=False)   # NEW FIELD
+    submitted_at    = db.Column(db.DateTime, default=datetime.utcnow)
 
 class GiftClaim(db.Model):
     id           = db.Column(db.Integer, primary_key=True)
@@ -45,6 +46,10 @@ class GiftClaim(db.Model):
     claimer_name = db.Column(db.String(200), nullable=False)
     claimer_phone = db.Column(db.String(30), nullable=False)
     claimed_at   = db.Column(db.DateTime, default=datetime.utcnow)
+
+# ─────────────────────────────────────────
+# GIFT CATALOGUE (max 2 per item)
+# ─────────────────────────────────────────
 
 GIFTS = [
     {"id": "cutlery", "name": "Cutlery Set", "description": "16–24 piece stainless steel cutlery set", "icon": "🍴",
@@ -93,8 +98,7 @@ MAX_PER_GIFT = 2
 # ─────────────────────────────────────────
 
 def validate_sa_phone(phone):
-    """Return True if phone is exactly 10 digits starting with 0."""
-    cleaned = re.sub(r'\D', '', phone)   # remove spaces, dashes, etc.
+    cleaned = re.sub(r'\D', '', phone)
     return bool(re.fullmatch(r'0\d{9}', cleaned))
 
 # ─────────────────────────────────────────
@@ -113,12 +117,12 @@ def rsvp():
         guest = Guest.query.filter_by(token=token).first()
 
     if request.method == 'POST':
-        full_name  = request.form.get('full_name', '').strip()
-        phone      = request.form.get('phone', '').strip()
-        attending  = request.form.get('attending') == 'yes'
-        form_token = request.form.get('token')
+        full_name   = request.form.get('full_name', '').strip()
+        phone       = request.form.get('phone', '').strip()
+        attending   = request.form.get('attending') == 'yes'
+        transport   = request.form.get('transport_needed') == 'yes'   # NEW
+        form_token  = request.form.get('token')
 
-        # Validation
         if not full_name or not phone:
             flash('Please fill in your name and phone number.', 'error')
             return redirect(url_for('rsvp', token=form_token))
@@ -134,13 +138,11 @@ def rsvp():
                 flash('You have already submitted your RSVP.', 'error')
                 return redirect(url_for('rsvp', token=form_token))
         else:
-            # For public RSVP (no token), check if phone number already used
             existing = RSVP.query.filter_by(phone=phone).first()
             if existing:
                 flash('This phone number has already submitted an RSVP.', 'error')
                 return redirect(url_for('rsvp'))
 
-        # Mark guest as used if token exists
         if form_token:
             g = Guest.query.filter_by(token=form_token).first()
             if g:
@@ -150,7 +152,8 @@ def rsvp():
             guest_token=form_token or None,
             full_name=full_name,
             phone=phone,
-            attending=attending
+            attending=attending,
+            transport_needed=transport   # NEW
         )
         db.session.add(new_rsvp)
         db.session.commit()
@@ -198,13 +201,11 @@ def claim_gift():
         flash('Gift not found.', 'error')
         return redirect(url_for('gifts'))
 
-    # Check total availability (max 2 per gift)
     total_claimed = GiftClaim.query.filter_by(gift_id=gift_id).count()
     if total_claimed >= MAX_PER_GIFT:
         flash(f'Sorry, the {gift["name"]} has already been fully claimed.', 'error')
         return redirect(url_for('gifts'))
 
-    # Prevent same person claiming same gift twice
     already_claimed = GiftClaim.query.filter_by(
         gift_id=gift_id,
         claimer_name=claimer_name,
@@ -322,11 +323,12 @@ def export_csv():
     rsvps = RSVP.query.order_by(RSVP.submitted_at.desc()).all()
     output = io.StringIO()
     writer = csv.writer(output)
-    writer.writerow(['Name', 'Phone', 'Attending', 'Submitted'])
+    writer.writerow(['Name', 'Phone', 'Attending', 'Transport Needed', 'Submitted'])
     for r in rsvps:
         writer.writerow([
             r.full_name, r.phone,
             'Yes' if r.attending else 'No',
+            'Yes' if r.transport_needed else 'No',
             r.submitted_at.strftime('%d %b %Y %H:%M')
         ])
     output.seek(0)
@@ -356,11 +358,14 @@ def export_gifts_csv():
                      download_name='gift-claims.csv')
 
 # ─────────────────────────────────────────
-# INIT DATABASE
+# INIT DATABASE (auto-adds new column if using SQLite)
 # ─────────────────────────────────────────
 
 with app.app_context():
     db.create_all()
+    # For PostgreSQL on Railway, if the column doesn't exist, you may need to add it manually:
+    # ALTER TABLE rsvp ADD COLUMN transport_needed BOOLEAN DEFAULT FALSE;
+    # This is safe to run after deployment.
 
 if __name__ == '__main__':
     app.run(debug=True)
